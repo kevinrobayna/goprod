@@ -21,7 +21,6 @@ func provideLogger() *zap.Logger {
 }
 
 func provideRouter(logger *zap.Logger) *gin.Engine {
-	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
 	r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
 	r.Use(ginzap.RecoveryWithZap(logger, true))
