@@ -22,6 +22,9 @@ Personally I love the following:
     * Go does not provide an interface for logs, instead it just provides classes. This means that you would
       implement whatever you need. I don't really like that as moving from one library to another might become a pain as
       you need to glue them together.
+* [testcontainers](http://testcontainers.org/)
+    * Framework for running your dependencies. This framework is great it can ran almost anything without any complications.
+    * I worked with the creator [@rnorth](https://github.com/rnorth) while I was at skyscanner and it made our services very resilient and reliable.
 
 ## Goals
 
