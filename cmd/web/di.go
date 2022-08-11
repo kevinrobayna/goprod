@@ -17,7 +17,6 @@ var WebModule = fx.Module("web",
 	fx.Invoke(invokeRoutes, invokeHttpServer),
 )
 
-// provideRouter HTTP Stuff
 func provideRouter(logger *zap.Logger) *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
@@ -26,17 +25,12 @@ func provideRouter(logger *zap.Logger) *gin.Engine {
 	return r
 }
 
-func provideWebHandler(logger *zap.Logger, router *gin.Engine, db *gorm.DB) *WebHandler {
+func provideWebHandler(logger *zap.Logger, router *gin.Engine, db *gorm.DB) IRoutes {
 	return &WebHandler{
 		Logger: logger,
 		R:      router,
 		db:     db,
 	}
-}
-
-func invokeRoutes(r *gin.Engine, h *WebHandler) {
-	r.GET("/", h.Hello)
-	r.GET("/ping", h.Ping)
 }
 
 func invokeHttpServer(lc fx.Lifecycle, ginEngine *gin.Engine, logger *zap.Logger) {
