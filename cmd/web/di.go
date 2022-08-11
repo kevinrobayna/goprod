@@ -17,7 +17,6 @@ var WebModule = fx.Module("web",
 	fx.Invoke(invokeRoutes, invokeHttpServer),
 )
 
-// provideRouter HTTP Stuff
 func provideRouter(logger *zap.Logger) *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()

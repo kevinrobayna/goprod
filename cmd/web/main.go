@@ -5,9 +5,10 @@ import (
 	"goprod/internal/di"
 )
 
+func opts() fx.Option {
+	return fx.Options(di.ApplicationModule, WebModule)
+}
+
 func main() {
-	fx.New(
-		di.ApplicationModule, WebModule,
-		fx.WithLogger(di.FxEvent),
-	).Run()
+	fx.New(opts(), fx.WithLogger(di.FxEvent)).Run()
 }
