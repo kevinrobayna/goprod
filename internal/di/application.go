@@ -4,15 +4,20 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 	"go.uber.org/zap"
-	"goprod/internal/models"
+	"goprod/internal/products"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"moul.io/zapgorm2"
 )
 
 var ApplicationModule = fx.Module("app",
-	fx.Provide(provideLogger, provideGormDB),
-	fx.Invoke(invokeMigrate),
+	fx.Provide(
+		provideLogger,
+		provideGormDB,
+		provideRepository,
+		provideService,
+	),
+	fx.Invoke(products.InvokeMigrate),
 )
 
 func provideLogger() *zap.Logger {
@@ -34,11 +39,10 @@ func provideGormDB(logger *zap.Logger) (*gorm.DB, error) {
 	return db, nil
 }
 
-func invokeMigrate(db *gorm.DB) {
-	err := db.AutoMigrate(&models.Product{})
-	if err != nil {
-		return
-	}
+func provideRepository(db *gorm.DB) products.IRepository {
+	return products.NewRepository(db)
+}
 
-	db.Create(&models.Product{Code: "D42", Price: 100})
+func provideService(repository products.IRepository) products.IService {
+	return products.NewService(repository)
 }

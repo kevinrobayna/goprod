@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"gorm.io/gorm"
+	"goprod/internal/products"
 	"net/http"
 	"time"
 )
@@ -25,12 +25,8 @@ func provideRouter(logger *zap.Logger) *gin.Engine {
 	return r
 }
 
-func provideWebHandler(logger *zap.Logger, router *gin.Engine, db *gorm.DB) IRoutes {
-	return &WebHandler{
-		Logger: logger,
-		R:      router,
-		db:     db,
-	}
+func provideWebHandler(logger *zap.Logger, router *gin.Engine, service products.IService) IRoutes {
+	return NewRoutes(logger, router, service)
 }
 
 func invokeHttpServer(lc fx.Lifecycle, ginEngine *gin.Engine, logger *zap.Logger) {

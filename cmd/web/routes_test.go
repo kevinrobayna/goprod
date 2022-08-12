@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/fx/fxtest"
-	"goprod/internal/models"
+	"goprod/internal/products"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -63,13 +63,12 @@ func TestRoutes(t *testing.T) {
 			panic(err.Error())
 		}
 
-		var product = models.Product{}
-		err = json.Unmarshal(body, &product)
+		var p []products.Product
+		err = json.Unmarshal(body, &p)
 		if err != nil {
 			panic(err.Error())
 		}
 
-		assert.Equal(t, "D42", product.Code)
-		assert.Equal(t, uint(100), product.Price)
+		assert.Equal(t, 0, len(p))
 	})
 }
