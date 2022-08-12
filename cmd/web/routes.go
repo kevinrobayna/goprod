@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/kevinrobayna/goprod/internal/models"
 	"go.uber.org/zap"
-	"goprod/internal/models"
 	"gorm.io/gorm"
 	"net/http"
 )
