@@ -5,9 +5,9 @@ import (
 	"errors"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
+	"github.com/kevinrobayna/goprod/internal/products"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
-	"goprod/internal/products"
 	"net/http"
 	"time"
 )
