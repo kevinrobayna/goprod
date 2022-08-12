@@ -1,4 +1,4 @@
-module goprod
+module github.com/kevinrobayna/goprod
 
 go 1.18
 

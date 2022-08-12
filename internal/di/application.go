@@ -1,10 +1,10 @@
 package di
 
 import (
+	"github.com/kevinrobayna/goprod/internal/products"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 	"go.uber.org/zap"
-	"goprod/internal/products"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"moul.io/zapgorm2"

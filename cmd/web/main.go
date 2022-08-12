@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/kevinrobayna/goprod/internal/di"
 	"go.uber.org/fx"
-	"goprod/internal/di"
 )
 
 func opts() fx.Option {

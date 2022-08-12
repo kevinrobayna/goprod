@@ -2,9 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/kevinrobayna/goprod/internal/products"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/fx/fxtest"
-	"goprod/internal/products"
 	"io/ioutil"
 	"net/http"
 	"testing"
