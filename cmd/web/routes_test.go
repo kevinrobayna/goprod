@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/kevinrobayna/goprod/internal/products"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/fx/fxtest"
-	"goprod/internal/products"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 )
@@ -30,7 +30,7 @@ func TestRoutes(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 
-		body, err := ioutil.ReadAll(resp.Body)
+		body, err := io.ReadAll(resp.Body)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -58,7 +58,7 @@ func TestRoutes(t *testing.T) {
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 
-		body, err := ioutil.ReadAll(resp.Body)
+		body, err := io.ReadAll(resp.Body)
 		if err != nil {
 			panic(err.Error())
 		}
