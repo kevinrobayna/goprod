@@ -2,8 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/kevinrobayna/goprod/internal/products"
+	"github.com/kevinrobayna/goprod/internal"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
 	"io"
 	"net/http"
@@ -19,7 +20,7 @@ func TestRoutes(t *testing.T) {
 
 	t.Run("Hello", func(t *testing.T) {
 		t.Parallel()
-		app := fxtest.New(t, opts())
+		app := fxtest.New(t, opts(), fx.NopLogger)
 		// Starts the app right away, and defers a stop when the test ends.
 		defer app.RequireStart().RequireStop()
 
@@ -47,7 +48,7 @@ func TestRoutes(t *testing.T) {
 	t.Run("Ping", func(t *testing.T) {
 		t.Parallel()
 
-		app := fxtest.New(t, opts())
+		app := fxtest.New(t, opts(), fx.NopLogger)
 		// Starts the app right away, and defers a stop when the test ends.
 		defer app.RequireStart().RequireStop()
 
@@ -63,7 +64,7 @@ func TestRoutes(t *testing.T) {
 			panic(err.Error())
 		}
 
-		var p []products.Product
+		var p []internal.Product
 		err = json.Unmarshal(body, &p)
 		if err != nil {
 			panic(err.Error())

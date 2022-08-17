@@ -2,18 +2,10 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/kevinrobayna/goprod/internal/products"
+	"github.com/kevinrobayna/goprod/internal"
 	"go.uber.org/zap"
 	"net/http"
 )
-
-func NewRoutes(logger *zap.Logger, router *gin.Engine, service products.IService) IRoutes {
-	return &WebHandler{
-		Logger:  logger,
-		R:       router,
-		service: service,
-	}
-}
 
 type IRoutes interface {
 	Hello(c *gin.Context)
@@ -23,7 +15,7 @@ type IRoutes interface {
 type WebHandler struct {
 	Logger  *zap.Logger
 	R       *gin.Engine
-	service products.IService
+	service internal.IService
 }
 
 func invokeRoutes(r *gin.Engine, h IRoutes) {

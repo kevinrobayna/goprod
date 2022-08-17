@@ -1,7 +1,6 @@
-package di
+package internal
 
 import (
-	"github.com/kevinrobayna/goprod/internal/products"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 	"go.uber.org/zap"
@@ -10,14 +9,12 @@ import (
 	"moul.io/zapgorm2"
 )
 
-var ApplicationModule = fx.Module("app",
-	fx.Provide(
-		provideLogger,
-		provideGormDB,
-		provideRepository,
-		provideService,
-	),
-	fx.Invoke(products.InvokeMigrate),
+var Module = fx.Module("app",
+	fx.Provide(provideLogger),
+	fx.Provide(provideGormDB),
+	fx.Provide(provideRepository),
+	fx.Provide(provideService),
+	fx.Invoke(invokeMigrate),
 )
 
 func provideLogger() *zap.Logger {
@@ -39,10 +36,17 @@ func provideGormDB(logger *zap.Logger) (*gorm.DB, error) {
 	return db, nil
 }
 
-func provideRepository(db *gorm.DB) products.IRepository {
-	return products.NewRepository(db)
+func invokeMigrate(db *gorm.DB) {
+	err := db.AutoMigrate(&product{})
+	if err != nil {
+		return
+	}
 }
 
-func provideService(repository products.IRepository) products.IService {
-	return products.NewService(repository)
+func provideRepository(db *gorm.DB) iRepository {
+	return &repository{db: db}
+}
+
+func provideService(repository iRepository) IService {
+	return &Service{repository: repository}
 }

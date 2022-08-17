@@ -1,4 +1,4 @@
-package di
+package internal
 
 import (
 	"go.uber.org/fx"
@@ -11,7 +11,7 @@ func TestApp(t *testing.T) {
 	t.Run("TestDependenciesAreSatisfied", func(t *testing.T) {
 		t.Parallel()
 
-		if err := fx.ValidateApp(ApplicationModule); err != nil {
+		if err := fx.ValidateApp(Module); err != nil {
 			t.Error(err)
 		}
 	})

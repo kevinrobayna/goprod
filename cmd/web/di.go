@@ -5,7 +5,7 @@ import (
 	"errors"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
-	"github.com/kevinrobayna/goprod/internal/products"
+	"github.com/kevinrobayna/goprod/internal"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"net/http"
@@ -13,8 +13,10 @@ import (
 )
 
 var WebModule = fx.Module("web",
-	fx.Provide(provideRouter, provideWebHandler),
-	fx.Invoke(invokeRoutes, invokeHttpServer),
+	fx.Provide(provideRouter),
+	fx.Provide(provideWebHandler),
+	fx.Invoke(invokeRoutes),
+	fx.Invoke(invokeHttpServer),
 )
 
 func provideRouter(logger *zap.Logger) *gin.Engine {
@@ -25,8 +27,12 @@ func provideRouter(logger *zap.Logger) *gin.Engine {
 	return r
 }
 
-func provideWebHandler(logger *zap.Logger, router *gin.Engine, service products.IService) IRoutes {
-	return NewRoutes(logger, router, service)
+func provideWebHandler(logger *zap.Logger, router *gin.Engine, service internal.IService) IRoutes {
+	return &WebHandler{
+		Logger:  logger,
+		R:       router,
+		service: service,
+	}
 }
 
 func invokeHttpServer(lc fx.Lifecycle, ginEngine *gin.Engine, logger *zap.Logger) {
