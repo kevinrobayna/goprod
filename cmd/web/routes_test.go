@@ -3,15 +3,13 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"github.com/kevinrobayna/goprod/internal/di"
 	"github.com/kevinrobayna/goprod/internal/models"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 	"io"
 	"net/http"
 	"testing"
@@ -35,6 +33,17 @@ func SetupWithPostgres() testcontainers.ContainerRequest {
 	}
 }
 
+func config(port string) di.DBConfig {
+	return di.DBConfig{
+		Host:     "localhost",
+		Port:     port,
+		User:     "goprod",
+		Password: "",
+		DbName:   "goprod",
+		SslMode:  "disable",
+	}
+}
+
 func TestRoutes(t *testing.T) {
 	t.Parallel()
 
@@ -51,13 +60,8 @@ func TestRoutes(t *testing.T) {
 		defer postgresC.Terminate(ctx)
 
 		port, err := postgresC.MappedPort(ctx, "5432/tcp")
-
-		dsn := fmt.Sprintf("host=localhost user=goprod password= dbname=goprod port=%s sslmode=disable", port.Port())
-		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		assert.NoError(t, err)
-
-		app := fxtest.New(t, opts(), fx.Replace(db))
-		// Starts the app right away, and defers a stop when the test ends.
+		app := fxtest.New(t, opts(), fx.Replace(config(port.Port())))
 		defer app.RequireStart().RequireStop()
 
 		resp, err := http.Get("http://localhost:8080/")
@@ -88,13 +92,8 @@ func TestRoutes(t *testing.T) {
 		defer postgresC.Terminate(ctx)
 
 		port, err := postgresC.MappedPort(ctx, "5432/tcp")
-
-		dsn := fmt.Sprintf("host=localhost user=goprod password= dbname=goprod port=%s sslmode=disable", port.Port())
-		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		assert.NoError(t, err)
-
-		app := fxtest.New(t, opts(), fx.Replace(db))
-		// Starts the app right away, and defers a stop when the test ends.
+		app := fxtest.New(t, opts(), fx.Replace(config(port.Port())))
 		defer app.RequireStart().RequireStop()
 
 		resp, err := http.Get("http://localhost:8080/ping")
