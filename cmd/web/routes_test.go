@@ -19,7 +19,11 @@ type Message struct {
 }
 
 func TestRoutes(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Hello", func(t *testing.T) {
+		t.Parallel()
+
 		ctx := context.Background()
 
 		data, err := di.TestWithPostgres(ctx)
@@ -50,6 +54,8 @@ func TestRoutes(t *testing.T) {
 	})
 
 	t.Run("Ping", func(t *testing.T) {
+		t.Parallel()
+
 		ctx := context.Background()
 		data, err := di.TestWithPostgres(ctx)
 		assert.NoError(t, err)
