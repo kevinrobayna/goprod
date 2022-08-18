@@ -1,5 +1,12 @@
 package internal
 
+type Product struct {
+	Id          uint   `json:"id"`
+	Code        string `json:"code"`
+	Description string `json:"description"`
+	Price       uint   `json:"price"`
+}
+
 type IService interface {
 	SaveProduct(product Product) error
 	GetProducts() ([]Product, error)
@@ -11,16 +18,54 @@ type Service struct {
 }
 
 func (s Service) SaveProduct(product Product) error {
-	//TODO implement me
-	panic("implement me")
+	if product.Id != 0 {
+		_, err := s.repository.UpdateProduct(mapModelToDao(product))
+		if err != nil {
+			return err
+		}
+	} else {
+		_, err := s.repository.SaveProduct(mapModelToDao(product))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (s Service) GetProducts() ([]Product, error) {
-	//TODO implement me
-	panic("implement me")
+	productsDao, err := s.repository.GetProducts()
+	if err != nil {
+		return []Product{}, err
+	}
+	var products []Product
+	for _, p := range productsDao {
+		products = append(products, mapDaoToModel(p))
+	}
+	return products, nil
 }
 
 func (s Service) GetProduct(id uint) (Product, error) {
-	//TODO implement me
-	panic("implement me")
+	p, err := s.repository.GetProduct(id)
+	if err != nil {
+		return Product{}, err
+	}
+	return mapDaoToModel(p), nil
+}
+
+func mapDaoToModel(dao product) Product {
+	return Product{
+		Id:          dao.ID,
+		Code:        dao.Code,
+		Description: dao.Description,
+		Price:       dao.Price,
+	}
+}
+
+func mapModelToDao(model Product) product {
+	return product{
+		ID:          model.Id,
+		Code:        model.Code,
+		Description: model.Description,
+		Price:       model.Price,
+	}
 }

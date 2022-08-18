@@ -4,10 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/kevinrobayna/goprod/internal"
-	"github.com/kevinrobayna/goprod/internal/di"
-	"github.com/kevinrobayna/goprod/internal/models"
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/fx"
 	"github.com/testcontainers/testcontainers-go"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
@@ -24,7 +21,7 @@ func TestRoutes(t *testing.T) {
 	t.Run("Hello", func(t *testing.T) {
 		ctx := context.Background()
 
-		pg, err := di.TestWithPostgres(ctx)
+		pg, err := internal.TestWithPostgres(ctx)
 		assert.NoError(t, err)
 		defer func(postgresC testcontainers.Container, ctx context.Context) {
 			err := pg.Container.Terminate(ctx)
@@ -53,7 +50,7 @@ func TestRoutes(t *testing.T) {
 
 	t.Run("Ping", func(t *testing.T) {
 		ctx := context.Background()
-		data, err := di.TestWithPostgres(ctx)
+		data, err := internal.TestWithPostgres(ctx)
 		assert.NoError(t, err)
 		defer func(postgresC testcontainers.Container, ctx context.Context) {
 			err := data.Container.Terminate(ctx)
@@ -73,18 +70,10 @@ func TestRoutes(t *testing.T) {
 		body, err := io.ReadAll(resp.Body)
 		assert.NoError(t, err)
 
-		var product = models.Product{}
-		err = json.Unmarshal(body, &product)
-		assert.NoError(t, err)
 		var p []internal.Product
 		err = json.Unmarshal(body, &p)
-		if err != nil {
-			panic(err.Error())
-		}
+		assert.NoError(t, err)
 
-		assert.NotEmpty(t, product)
-		assert.Equal(t, "D42", product.Code)
-		assert.Equal(t, uint(100), product.Price)
 		assert.Equal(t, 0, len(p))
 	})
 }

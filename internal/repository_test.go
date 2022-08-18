@@ -1,7 +1,9 @@
 package internal
 
 import (
+	"context"
 	"github.com/stretchr/testify/assert"
+	"github.com/testcontainers/testcontainers-go"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
 	"math/rand"
@@ -14,8 +16,18 @@ func TestRepository(t *testing.T) {
 	t.Run("SaveProduct", func(t *testing.T) {
 		t.Parallel()
 
+		ctx := context.Background()
+		data, err := TestWithPostgres(ctx)
+		assert.NoError(t, err)
+		defer func(postgresC testcontainers.Container, ctx context.Context) {
+			err := data.Container.Terminate(ctx)
+			if err != nil {
+				t.Error(err)
+			}
+		}(data.Container, ctx)
+
 		var repository iRepository
-		app := fxtest.New(t, Module, fx.NopLogger, fx.Populate(&repository))
+		app := fxtest.New(t, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
 		defer app.RequireStart().RequireStop()
 
 		product := createRandomProduct()
@@ -34,8 +46,18 @@ func TestRepository(t *testing.T) {
 	t.Run("SaveProductTwiceFails", func(t *testing.T) {
 		t.Parallel()
 
+		ctx := context.Background()
+		data, err := TestWithPostgres(ctx)
+		assert.NoError(t, err)
+		defer func(postgresC testcontainers.Container, ctx context.Context) {
+			err := data.Container.Terminate(ctx)
+			if err != nil {
+				t.Error(err)
+			}
+		}(data.Container, ctx)
+
 		var repository iRepository
-		app := fxtest.New(t, Module, fx.NopLogger, fx.Populate(&repository))
+		app := fxtest.New(t, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
 		defer app.RequireStart().RequireStop()
 
 		product, err := repository.SaveProduct(createRandomProduct())
@@ -48,8 +70,18 @@ func TestRepository(t *testing.T) {
 	t.Run("UpdateProduct", func(t *testing.T) {
 		t.Parallel()
 
+		ctx := context.Background()
+		data, err := TestWithPostgres(ctx)
+		assert.NoError(t, err)
+		defer func(postgresC testcontainers.Container, ctx context.Context) {
+			err := data.Container.Terminate(ctx)
+			if err != nil {
+				t.Error(err)
+			}
+		}(data.Container, ctx)
+
 		var repository iRepository
-		app := fxtest.New(t, Module, fx.NopLogger, fx.Populate(&repository))
+		app := fxtest.New(t, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
 		defer app.RequireStart().RequireStop()
 
 		product, err := repository.SaveProduct(createRandomProduct())
@@ -65,8 +97,18 @@ func TestRepository(t *testing.T) {
 	t.Run("GetProduct", func(t *testing.T) {
 		t.Parallel()
 
+		ctx := context.Background()
+		data, err := TestWithPostgres(ctx)
+		assert.NoError(t, err)
+		defer func(postgresC testcontainers.Container, ctx context.Context) {
+			err := data.Container.Terminate(ctx)
+			if err != nil {
+				t.Error(err)
+			}
+		}(data.Container, ctx)
+
 		var repository iRepository
-		app := fxtest.New(t, Module, fx.NopLogger, fx.Populate(&repository))
+		app := fxtest.New(t, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
 		defer app.RequireStart().RequireStop()
 
 		product, err := repository.SaveProduct(createRandomProduct())
@@ -84,11 +126,21 @@ func TestRepository(t *testing.T) {
 	t.Run("GetProducts", func(t *testing.T) {
 		t.Parallel()
 
+		ctx := context.Background()
+		data, err := TestWithPostgres(ctx)
+		assert.NoError(t, err)
+		defer func(postgresC testcontainers.Container, ctx context.Context) {
+			err := data.Container.Terminate(ctx)
+			if err != nil {
+				t.Error(err)
+			}
+		}(data.Container, ctx)
+
 		var repository iRepository
-		app := fxtest.New(t, Module, fx.NopLogger, fx.Populate(&repository))
+		app := fxtest.New(t, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
 		defer app.RequireStart().RequireStop()
 
-		_, err := repository.SaveProduct(createRandomProduct())
+		_, err = repository.SaveProduct(createRandomProduct())
 		assert.NoError(t, err, "Unable to save product in db")
 		_, err = repository.SaveProduct(createRandomProduct())
 		assert.NoError(t, err, "Unable to save product in db")

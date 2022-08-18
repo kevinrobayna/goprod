@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"github.com/kevinrobayna/goprod/internal/models"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 	"go.uber.org/zap"
@@ -14,6 +13,7 @@ import (
 )
 
 var Module = fx.Module("app",
+	fx.Provide(provideConfig, provideDbConfig),
 	fx.Provide(provideLogger),
 	fx.Provide(provideGormDB),
 	fx.Provide(provideRepository),
@@ -46,8 +46,7 @@ func (config DBConfig) GetDsn() string {
 		config.Password,
 		config.DbName,
 		config.Port,
-		config.SslMode,
-	)
+		config.SslMode)
 }
 
 func provideConfig() (AppConfig, error) {

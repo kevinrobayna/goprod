@@ -6,6 +6,7 @@ import (
 
 type product struct {
 	gorm.Model
+	ID          uint `gorm:"primarykey"`
 	Code        string
 	Description string
 	Price       uint
