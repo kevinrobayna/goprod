@@ -57,6 +57,9 @@ func provideConfig() (AppConfig, error) {
 	var cfg AppConfig
 	decoder := yaml.NewDecoder(f)
 	err = decoder.Decode(&cfg)
+	if err != nil {
+		return AppConfig{}, err
+	}
 	return cfg, nil
 }
 

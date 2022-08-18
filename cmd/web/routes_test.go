@@ -53,7 +53,12 @@ func TestRoutes(t *testing.T) {
 			Started:          true,
 		})
 		assert.NoError(t, err)
-		defer postgresC.Terminate(ctx)
+		defer func(postgresC testcontainers.Container, ctx context.Context) {
+			err := postgresC.Terminate(ctx)
+			if err != nil {
+				t.Error(err)
+			}
+		}(postgresC, ctx)
 
 		port, err := postgresC.MappedPort(ctx, "5432/tcp")
 		assert.NoError(t, err)
@@ -83,7 +88,12 @@ func TestRoutes(t *testing.T) {
 			Started:          true,
 		})
 		assert.NoError(t, err)
-		defer postgresC.Terminate(ctx)
+		defer func(postgresC testcontainers.Container, ctx context.Context) {
+			err := postgresC.Terminate(ctx)
+			if err != nil {
+				t.Error(err)
+			}
+		}(postgresC, ctx)
 
 		port, err := postgresC.MappedPort(ctx, "5432/tcp")
 		assert.NoError(t, err)
