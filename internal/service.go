@@ -1,5 +1,7 @@
 package internal
 
+import "gorm.io/gorm"
+
 type Product struct {
 	Id          uint   `json:"id"`
 	Code        string `json:"code"`
@@ -63,7 +65,7 @@ func mapDaoToModel(dao product) Product {
 
 func mapModelToDao(model Product) product {
 	return product{
-		ID:          model.Id,
+		Model:       gorm.Model{ID: model.Id},
 		Code:        model.Code,
 		Description: model.Description,
 		Price:       model.Price,
