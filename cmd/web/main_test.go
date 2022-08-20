@@ -11,7 +11,7 @@ func TestWebApp(t *testing.T) {
 	t.Run("TestDependenciesAreSatisfied", func(t *testing.T) {
 		t.Parallel()
 
-		if err := fx.ValidateApp(opts()); err != nil {
+		if err := fx.ValidateApp(opts(), fx.NopLogger); err != nil {
 			t.Error(err)
 		}
 	})

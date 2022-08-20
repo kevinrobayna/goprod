@@ -1,8 +1,7 @@
-package di
+package internal
 
 import (
 	"fmt"
-	"github.com/kevinrobayna/goprod/internal/models"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 	"go.uber.org/zap"
@@ -13,10 +12,12 @@ import (
 	"os"
 )
 
-var ApplicationModule = fx.Module("app",
+var Module = fx.Module("app",
 	fx.Provide(provideConfig, provideDbConfig),
 	fx.Provide(provideLogger),
 	fx.Provide(provideGormDB),
+	fx.Provide(provideRepository),
+	fx.Provide(provideService),
 	fx.Invoke(invokeMigrate),
 )
 
@@ -45,8 +46,7 @@ func (config DBConfig) GetDsn() string {
 		config.Password,
 		config.DbName,
 		config.Port,
-		config.SslMode,
-	)
+		config.SslMode)
 }
 
 func provideConfig() (AppConfig, error) {
@@ -82,10 +82,16 @@ func provideGormDB(config DBConfig, logger *zap.Logger) (*gorm.DB, error) {
 }
 
 func invokeMigrate(db *gorm.DB) {
-	err := db.AutoMigrate(&models.Product{})
+	err := db.AutoMigrate(&product{})
 	if err != nil {
 		return
 	}
+}
 
-	db.Create(&models.Product{Code: "D42", Price: 100})
+func provideRepository(db *gorm.DB) iRepository {
+	return &repository{db: db}
+}
+
+func provideService(repository iRepository) IService {
+	return &Service{repository: repository}
 }
