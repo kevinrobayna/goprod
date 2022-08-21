@@ -22,7 +22,7 @@ var Module = fx.Module("app",
 )
 
 func provideLogger() *zap.Logger {
-	logger, _ := zap.NewDevelopment(
+	logger, _ := zap.NewProduction(
 		zap.AddCaller(),
 	)
 	return logger
