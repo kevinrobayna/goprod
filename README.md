@@ -37,3 +37,43 @@ This app should be observable at all times and be able to scale up in terms of f
 
 Additionally, everything should be tested with different layers of tests from unit to e2e and contract tests so that
 others can rely on our API to be dependable.
+
+## Development
+
+[Install Go](https://go.dev/doc/install), you can do this with Brew or your favourite way of installing dependencies.
+
+```shell
+  brew install go
+```
+
+Run Tests:
+
+```shell
+  make test
+```
+
+Spin up database and other dependencies:
+
+```shell
+  docker-compose up -d
+```
+
+Once you don't need them anymore you can run the following command to stop the containers:
+
+```shell
+  docker-compose down -v
+```
+
+Build and run:
+
+```shell
+  make clean build
+  bin/app web
+```
+
+Check lint and dependencies:
+
+```shell
+  make check
+  make lint
+``` 

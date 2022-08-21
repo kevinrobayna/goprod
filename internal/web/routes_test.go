@@ -1,4 +1,4 @@
-package main
+package web
 
 import (
 	"context"
@@ -30,7 +30,7 @@ func TestRoutes(t *testing.T) {
 			}
 		}(pg.Container, ctx)
 
-		app := fxtest.New(t, opts(), fx.Replace(pg.Config))
+		app := fxtest.New(t, internal.TestModule, Module, fx.Replace(pg.Config))
 		defer app.RequireStart().RequireStop()
 
 		resp, err := http.Get("http://localhost:8080/")
@@ -59,7 +59,7 @@ func TestRoutes(t *testing.T) {
 			}
 		}(data.Container, ctx)
 
-		app := fxtest.New(t, opts(), fx.Replace(data.Config))
+		app := fxtest.New(t, internal.TestModule, Module, fx.Replace(data.Config))
 		defer app.RequireStart().RequireStop()
 
 		resp, err := http.Get("http://localhost:8080/ping")

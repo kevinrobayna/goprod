@@ -22,12 +22,21 @@ var Module = fx.Module("app",
 )
 
 func provideLogger() *zap.Logger {
-	logger, _ := zap.NewProduction()
+	logger, _ := zap.NewDevelopment(
+		zap.AddCaller(),
+	)
 	return logger
 }
 
 type AppConfig struct {
+	Build    BuildConfig
 	DBConfig DBConfig `yaml:"db_config"`
+}
+
+type BuildConfig struct {
+	ConfigFile string
+	Sha        string
+	Date       string
 }
 
 type DBConfig struct {
@@ -49,15 +58,17 @@ func (config DBConfig) GetDsn() string {
 		config.SslMode)
 }
 
-func provideConfig() (AppConfig, error) {
-	f, err := os.Open("config.yml")
+func provideConfig(logger *zap.Logger, build BuildConfig) (AppConfig, error) {
+	f, err := os.Open(build.ConfigFile)
 	if err != nil {
+		logger.Fatal("Unable to open config file", zap.Error(err))
 		return AppConfig{}, err
 	}
 	var cfg AppConfig
 	decoder := yaml.NewDecoder(f)
 	err = decoder.Decode(&cfg)
 	if err != nil {
+		logger.Fatal("Unable to decode config file", zap.Error(err))
 		return AppConfig{}, err
 	}
 	return cfg, nil
@@ -76,6 +87,7 @@ func provideGormDB(config DBConfig, logger *zap.Logger) (*gorm.DB, error) {
 	gormLogger.SetAsDefault() // configure gorm to use this zapgorm.Logger for callbacks
 	db, err := gorm.Open(postgres.Open(config.GetDsn()), &gorm.Config{Logger: gormLogger})
 	if err != nil {
+		logger.Fatal("Unable to establish connection with database", zap.Error(err))
 		return nil, err
 	}
 	return db, nil

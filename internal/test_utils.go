@@ -4,6 +4,20 @@ import (
 	"context"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
+	"go.uber.org/fx"
+	"time"
+)
+
+var TestModule = fx.Module("test",
+	fx.Provide(
+		func() BuildConfig {
+			return BuildConfig{
+				ConfigFile: "config.yml",
+				Sha:        "test",
+				Date:       time.UnixDate,
+			}
+		},
+	),
 )
 
 type DBContainer struct {

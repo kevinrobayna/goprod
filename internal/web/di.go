@@ -1,4 +1,4 @@
-package main
+package web
 
 import (
 	"context"
@@ -12,7 +12,8 @@ import (
 	"time"
 )
 
-var WebModule = fx.Module("web",
+var Module = fx.Module("web",
+	internal.Module,
 	fx.Provide(provideRouter),
 	fx.Provide(provideWebHandler),
 	fx.Invoke(invokeRoutes),
@@ -20,7 +21,7 @@ var WebModule = fx.Module("web",
 )
 
 func provideRouter(logger *zap.Logger) *gin.Engine {
-	gin.SetMode(gin.ReleaseMode)
+	//gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
 	r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
 	r.Use(ginzap.RecoveryWithZap(logger, true))
@@ -28,7 +29,7 @@ func provideRouter(logger *zap.Logger) *gin.Engine {
 }
 
 func provideWebHandler(logger *zap.Logger, router *gin.Engine, service internal.IService) IRoutes {
-	return &WebHandler{
+	return &Handler{
 		Logger:  logger,
 		R:       router,
 		service: service,

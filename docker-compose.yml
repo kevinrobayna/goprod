@@ -1,0 +1,11 @@
+version: '3'
+services:
+  database:
+    image: 'postgres:14.5'
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: goprod
+      POSTGRES_PASSWORD: ''
+      POSTGRES_DB: goprod
+      POSTGRES_HOST_AUTH_METHOD: trust
