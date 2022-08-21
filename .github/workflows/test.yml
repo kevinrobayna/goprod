@@ -15,14 +15,9 @@ jobs:
       - uses: actions/checkout@v3
       - uses: golangci/golangci-lint-action@v3
   test:
-    strategy:
-      matrix:
-        go-version: [ 1.17.x, 1.18.x, 1.x ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v3
-        with:
-          go-version: ${{ matrix.go-version }}
         id: go
       - uses: actions/checkout@v3
 
@@ -40,7 +35,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: ./cover.out
-          name: goprod-${{ matrix.go-version }}
+          name: goprod
 
       - name: Test Summary
         uses: test-summary/action@v1

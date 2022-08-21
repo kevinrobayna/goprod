@@ -7,15 +7,13 @@ import (
 	"go.uber.org/fx"
 	"log"
 	"os"
-	"runtime"
 	"sort"
 )
 
 var (
-	AppName   = "goprod"
-	Version   = "unknown"
-	Date      = "unknown"
-	GoVersion = runtime.Version()
+	AppName = "goprod"
+	Version = "unknown"
+	Date    = "unknown"
 )
 
 func opts() fx.Option {
