@@ -3,8 +3,10 @@ module github.com/kevinrobayna/goprod
 go 1.19
 
 require (
+	github.com/docker/go-connections v0.4.0
 	github.com/gin-contrib/zap v0.0.2
 	github.com/gin-gonic/gin v1.8.1
+	github.com/lib/pq v1.10.2
 	github.com/stretchr/testify v1.8.0
 	github.com/testcontainers/testcontainers-go v0.13.0
 	github.com/urfave/cli/v2 v2.11.2
@@ -29,7 +31,6 @@ require (
 	github.com/dnephin/pflag v1.0.7 // indirect
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker v20.10.11+incompatible // indirect
-	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/fatih/color v1.10.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
