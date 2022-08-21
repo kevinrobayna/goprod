@@ -27,7 +27,7 @@ func TestRepository(t *testing.T) {
 		}(data.Container, ctx)
 
 		var repository iRepository
-		app := fxtest.New(t, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
+		app := fxtest.New(t, TestModule, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
 		defer app.RequireStart().RequireStop()
 
 		product := createRandomProduct()
@@ -57,7 +57,7 @@ func TestRepository(t *testing.T) {
 		}(data.Container, ctx)
 
 		var repository iRepository
-		app := fxtest.New(t, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
+		app := fxtest.New(t, TestModule, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
 		defer app.RequireStart().RequireStop()
 
 		product, err := repository.SaveProduct(createRandomProduct())
@@ -81,7 +81,7 @@ func TestRepository(t *testing.T) {
 		}(data.Container, ctx)
 
 		var repository iRepository
-		app := fxtest.New(t, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
+		app := fxtest.New(t, TestModule, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
 		defer app.RequireStart().RequireStop()
 
 		product, err := repository.SaveProduct(createRandomProduct())
@@ -108,7 +108,7 @@ func TestRepository(t *testing.T) {
 		}(data.Container, ctx)
 
 		var repository iRepository
-		app := fxtest.New(t, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
+		app := fxtest.New(t, TestModule, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
 		defer app.RequireStart().RequireStop()
 
 		product, err := repository.SaveProduct(createRandomProduct())
@@ -137,7 +137,7 @@ func TestRepository(t *testing.T) {
 		}(data.Container, ctx)
 
 		var repository iRepository
-		app := fxtest.New(t, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
+		app := fxtest.New(t, TestModule, Module, fx.NopLogger, fx.Replace(data.Config), fx.Populate(&repository))
 		defer app.RequireStart().RequireStop()
 
 		_, err = repository.SaveProduct(createRandomProduct())

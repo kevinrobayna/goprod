@@ -1,9 +1,9 @@
 db_config:
   host: localhost
-  port: 3306
-  user: root
+  port: 5432
+  user: goprod
   password: ""
-  database: test
+  database: goprod
   sslmode: disable
 
 

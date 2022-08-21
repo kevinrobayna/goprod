@@ -11,7 +11,7 @@ func TestApp(t *testing.T) {
 	t.Run("TestDependenciesAreSatisfied", func(t *testing.T) {
 		t.Parallel()
 
-		if err := fx.ValidateApp(Module); err != nil {
+		if err := fx.ValidateApp(TestModule, Module); err != nil {
 			t.Error(err)
 		}
 	})

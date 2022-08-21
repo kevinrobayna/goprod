@@ -1,4 +1,4 @@
-package main
+package web
 
 import (
 	"github.com/gin-gonic/gin"
@@ -12,7 +12,7 @@ type IRoutes interface {
 	Ping(c *gin.Context)
 }
 
-type WebHandler struct {
+type Handler struct {
 	Logger  *zap.Logger
 	R       *gin.Engine
 	service internal.IService
@@ -23,11 +23,11 @@ func invokeRoutes(r *gin.Engine, h IRoutes) {
 	r.GET("/ping", h.Ping)
 }
 
-func (h *WebHandler) Hello(c *gin.Context) {
+func (h *Handler) Hello(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "hello"})
 }
 
-func (h *WebHandler) Ping(c *gin.Context) {
+func (h *Handler) Ping(c *gin.Context) {
 	product, _ := h.service.GetProducts()
 	c.JSON(http.StatusOK, product)
 }
