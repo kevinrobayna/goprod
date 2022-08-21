@@ -2,6 +2,8 @@ package internal
 
 import (
 	"context"
+	"github.com/docker/go-connections/nat"
+	_ "github.com/lib/pq"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"go.uber.org/fx"
@@ -26,6 +28,11 @@ type DBContainer struct {
 }
 
 func TestWithPostgres(ctx context.Context) (DBContainer, error) {
+	dsn := func(port nat.Port) string {
+		cfg := config(port.Port())
+		return cfg.GetDsn()
+	}
+
 	req := testcontainers.ContainerRequest{
 		Image: "postgres:14.5",
 		Env: map[string]string{
@@ -35,7 +42,8 @@ func TestWithPostgres(ctx context.Context) (DBContainer, error) {
 			"POSTGRES_HOST_AUTH_METHOD": "trust",
 		},
 		ExposedPorts: []string{"5432/tcp"},
-		WaitingFor:   wait.ForListeningPort("5432/tcp"),
+		WaitingFor: wait.ForSQL("5432/tcp", "postgres", dsn).
+			Timeout(time.Second * 5),
 	}
 	postgresC, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: req,
