@@ -49,9 +49,3 @@ lint:
 .PHONY: lint-fix
 lint-fix:
 	$(LINT_COMMAND) --fix
-
-.PHONY: install-deps
-install-deps:
-	go mod download
-	go install gotest.tools/gotestsum@latest
-
