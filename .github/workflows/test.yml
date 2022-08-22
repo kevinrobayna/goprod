@@ -39,8 +39,15 @@ jobs:
           files: ./cover.out
           name: goprod
 
-      - name: Test Summary
+      - name: Create test summary
         uses: test-summary/action@v1
         with:
-          paths: "unit-tests.xml"
+          paths: unit-tests.xml
+          output: test-results.html
+        if: always()
+      - name: Upload test summary
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-summary
+          path: test-results.html
         if: always()
