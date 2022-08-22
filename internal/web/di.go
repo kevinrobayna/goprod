@@ -8,13 +8,16 @@ import (
 	"github.com/kevinrobayna/goprod/internal"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
+	"net"
 	"net/http"
+	"strings"
 	"time"
 )
 
 var Module = fx.Module("web",
 	internal.Module,
 	fx.Provide(provideRouter),
+	fx.Provide(provideListener, providePort),
 	fx.Provide(provideWebHandler),
 	fx.Invoke(invokeRoutes),
 	fx.Invoke(invokeHttpServer),
@@ -28,6 +31,22 @@ func provideRouter(logger *zap.Logger) *gin.Engine {
 	return r
 }
 
+func provideListener(logger *zap.Logger, cfg internal.AppConfig) net.Listener {
+	logger.Info("using config", zap.String("addr", cfg.WebConfig.Addr))
+	listener, err := net.Listen("tcp", cfg.WebConfig.Addr)
+	if err != nil {
+		logger.Fatal("failed to listen and serve from server", zap.Error(err))
+	}
+	return listener
+}
+
+type Port string
+
+func providePort(listener net.Listener) Port {
+	addr := strings.TrimPrefix(listener.Addr().String(), "[::]:")
+	return Port(addr)
+}
+
 func provideWebHandler(logger *zap.Logger, router *gin.Engine, service internal.IService) IRoutes {
 	return &Handler{
 		Logger:  logger,
@@ -36,18 +55,16 @@ func provideWebHandler(logger *zap.Logger, router *gin.Engine, service internal.
 	}
 }
 
-func invokeHttpServer(lc fx.Lifecycle, ginEngine *gin.Engine, logger *zap.Logger) {
-	logger.Info("Executing httpServer.")
+func invokeHttpServer(lc fx.Lifecycle, ginEngine *gin.Engine, listener net.Listener, logger *zap.Logger) {
 	server := http.Server{
-		Addr:    ":8080",
 		Handler: ginEngine,
 	}
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			logger.Info("running server", zap.String("addr", server.Addr))
+			logger.Info("running server", zap.String("addr", listener.Addr().String()))
 			go func() {
-				if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-					logger.Error("failed to listen and serve from server", zap.Error(err))
+				if err := server.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
+					logger.Fatal("failed to serve from server", zap.Error(err))
 				}
 			}()
 			return nil

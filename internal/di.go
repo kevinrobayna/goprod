@@ -29,14 +29,19 @@ func provideLogger() *zap.Logger {
 }
 
 type AppConfig struct {
-	Build    BuildConfig
-	DBConfig DBConfig `yaml:"db_config"`
+	Build     BuildConfig
+	WebConfig WebConfig `yaml:"web"`
+	DBConfig  DBConfig  `yaml:"database"`
 }
 
 type BuildConfig struct {
 	ConfigFile string
 	Sha        string
 	Date       string
+}
+
+type WebConfig struct {
+	Addr string `yaml:"addr"`
 }
 
 type DBConfig struct {

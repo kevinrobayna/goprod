@@ -2,19 +2,26 @@ package internal
 
 import (
 	"context"
+	"fmt"
 	"github.com/docker/go-connections/nat"
 	_ "github.com/lib/pq"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"go.uber.org/fx"
+	"path/filepath"
+	"runtime"
 	"time"
 )
 
 var TestModule = fx.Module("test",
 	fx.Provide(
 		func() BuildConfig {
+			_, b, _, _ := runtime.Caller(0)
+
+			// Root folder of this project
+			Root := filepath.Join(filepath.Dir(b), "..")
 			return BuildConfig{
-				ConfigFile: "config.yml",
+				ConfigFile: fmt.Sprintf("%s/config.yml", Root),
 				Sha:        "test",
 				Date:       time.UnixDate,
 			}

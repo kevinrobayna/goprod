@@ -3,6 +3,7 @@ package web
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/kevinrobayna/goprod/internal"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
@@ -18,7 +19,10 @@ type Message struct {
 }
 
 func TestRoutes(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Hello", func(t *testing.T) {
+		t.Parallel()
 		ctx := context.Background()
 
 		pg, err := internal.TestWithPostgres(ctx)
@@ -30,10 +34,11 @@ func TestRoutes(t *testing.T) {
 			}
 		}(pg.Container, ctx)
 
-		app := fxtest.New(t, internal.TestModule, Module, fx.Replace(pg.Config))
+		var port Port
+		app := fxtest.New(t, internal.TestModule, Module, fx.Populate(&port))
 		defer app.RequireStart().RequireStop()
 
-		resp, err := http.Get("http://localhost:8080/")
+		resp, err := http.Get(fmt.Sprintf("http://localhost:%s/", port))
 		assert.NoError(t, err)
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
@@ -49,6 +54,8 @@ func TestRoutes(t *testing.T) {
 	})
 
 	t.Run("Ping", func(t *testing.T) {
+		t.Parallel()
+
 		ctx := context.Background()
 		data, err := internal.TestWithPostgres(ctx)
 		assert.NoError(t, err)
@@ -59,10 +66,11 @@ func TestRoutes(t *testing.T) {
 			}
 		}(data.Container, ctx)
 
-		app := fxtest.New(t, internal.TestModule, Module, fx.Replace(data.Config))
+		var port Port
+		app := fxtest.New(t, internal.TestModule, Module, fx.Replace(data.Config), fx.Populate(&port))
 		defer app.RequireStart().RequireStop()
 
-		resp, err := http.Get("http://localhost:8080/ping")
+		resp, err := http.Get(fmt.Sprintf("http://localhost:%s/ping", port))
 		assert.NoError(t, err)
 
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
