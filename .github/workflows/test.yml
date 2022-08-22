@@ -42,5 +42,5 @@ jobs:
       - name: Test Summary
         uses: test-summary/action@v1
         with:
-          paths: "**/TEST-*.xml"
+          paths: "unit-tests.xml"
         if: always()
