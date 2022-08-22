@@ -24,18 +24,17 @@ func TestRoutes(t *testing.T) {
 	t.Run("Hello", func(t *testing.T) {
 		t.Parallel()
 		ctx := context.Background()
-
-		pg, err := internal.TestWithPostgres(ctx)
+		data, err := internal.TestWithPostgres(ctx)
 		assert.NoError(t, err)
 		defer func(postgresC testcontainers.Container, ctx context.Context) {
-			err := pg.Container.Terminate(ctx)
+			err := data.Container.Terminate(ctx)
 			if err != nil {
 				t.Error(err)
 			}
-		}(pg.Container, ctx)
+		}(data.Container, ctx)
 
 		var port Port
-		app := fxtest.New(t, internal.TestModule, Module, fx.Populate(&port))
+		app := fxtest.New(t, internal.TestModule, Module, fx.Replace(data.Config), fx.Populate(&port))
 		defer app.RequireStart().RequireStop()
 
 		resp, err := http.Get(fmt.Sprintf("http://localhost:%s/", port))
