@@ -1,5 +1,5 @@
 web:
-  addr: ":8080"
+  addr: ":0"
 
 database:
   host: localhost
