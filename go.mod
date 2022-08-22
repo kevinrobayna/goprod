@@ -6,7 +6,7 @@ require (
 	github.com/docker/go-connections v0.4.0
 	github.com/gin-contrib/zap v0.0.2
 	github.com/gin-gonic/gin v1.8.1
-	github.com/lib/pq v1.10.2
+	github.com/lib/pq v1.10.6
 	github.com/stretchr/testify v1.8.0
 	github.com/testcontainers/testcontainers-go v0.13.0
 	github.com/urfave/cli/v2 v2.11.2
