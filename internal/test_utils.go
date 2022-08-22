@@ -21,7 +21,7 @@ var TestModule = fx.Module("test",
 			// Root folder of this project
 			Root := filepath.Join(filepath.Dir(b), "..")
 			return BuildConfig{
-				ConfigFile: fmt.Sprintf("%s/config.yml", Root),
+				ConfigFile: fmt.Sprintf("%s/config_test.yml", Root),
 				Sha:        "test",
 				Date:       time.UnixDate,
 			}
