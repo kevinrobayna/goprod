@@ -4,6 +4,9 @@
 # This will ignore the output of the application
 bin/
 
+# This is the output of the tests
+unit-tests.xml
+
 ### DB Stuff
 *.sqlite
 

@@ -29,7 +29,12 @@ bin/%:
 
 .PHONY: test
 test:
-	go run gotest.tools/gotestsum --format short-verbose --packages="./..." -- -coverprofile=cover.out
+	go run gotest.tools/gotestsum \
+		--format short-verbose \
+		--packages="./..." \
+		--junitfile unit-tests.xml \
+		--rerun-fails=3 \
+		-- -coverprofile=cover.out
 
 .PHONY: check
 check:
@@ -44,9 +49,3 @@ lint:
 .PHONY: lint-fix
 lint-fix:
 	$(LINT_COMMAND) --fix
-
-.PHONY: install-deps
-install-deps:
-	go mod download
-	go install gotest.tools/gotestsum@latest
-
