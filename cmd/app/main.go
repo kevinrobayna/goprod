@@ -53,6 +53,7 @@ func main() {
 									ConfigFile: cCtx.String("config"),
 									Sha:        Version,
 									Date:       Date,
+									DevMode:    false,
 								}
 							},
 						),
