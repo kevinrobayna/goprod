@@ -32,7 +32,6 @@ test:
 	go run gotest.tools/gotestsum \
 		--format short-verbose \
 		--packages="./..." \
-		--junitfile unit-tests.xml \
 		--rerun-fails=3 \
 		-- -coverprofile=cover.out
 

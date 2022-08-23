@@ -21,10 +21,12 @@ var Module = fx.Module("app",
 	fx.Invoke(invokeMigrate),
 )
 
-func provideLogger() *zap.Logger {
-	logger, _ := zap.NewProduction(
-		zap.AddCaller(),
-	)
+func provideLogger(bcfg BuildConfig) *zap.Logger {
+	cfg := zap.NewProductionConfig()
+	cfg.InitialFields = map[string]interface{}{"sha": bcfg.Sha, "build_date": bcfg.Date}
+	cfg.Development = bcfg.DevMode
+	logger, _ := cfg.Build(zap.AddCaller())
+
 	return logger
 }
 
@@ -38,6 +40,7 @@ type BuildConfig struct {
 	ConfigFile string
 	Sha        string
 	Date       string
+	DevMode    bool
 }
 
 type WebConfig struct {

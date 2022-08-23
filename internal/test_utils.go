@@ -24,6 +24,7 @@ var TestModule = fx.Module("test",
 				ConfigFile: fmt.Sprintf("%s/config_test.yml", Root),
 				Sha:        "test",
 				Date:       time.UnixDate,
+				DevMode:    true,
 			}
 		},
 	),
