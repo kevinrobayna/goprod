@@ -11,7 +11,7 @@ require (
 	github.com/testcontainers/testcontainers-go v0.13.0
 	github.com/urfave/cli/v2 v2.11.2
 	go.uber.org/fx v1.18.1
-	go.uber.org/zap v1.22.0
+	go.uber.org/zap v1.23.0
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/postgres v1.3.9
 	gorm.io/gorm v1.23.8
